@@ -12,16 +12,17 @@ This macro completely replaces the manual workflow, compressing hours of tedious
 
 ---
 
-## 🛠️ The Manual Workflow vs. Automated Solution
+## 🛠️ Data Preparation Workflow vs. Automated Cleaning
 
-| Manual Steps (Before) | Automated Solution (After) |
+| Required Manual Steps (System & Conversion) | Automated Business Logic (Your VBA Macro) |
 | :--- | :--- |
-| Extract VAT report from NAV 2009 as a PDF. | Raw converted Excel data is processed directly. |
-| Use *I love pdf* to convert PDF into multi-sheet Excel files. | Streamlined macro runs instantly on the workbook. |
-| Manually find and delete odd-numbered "Table #" sheets. | **Automated:** Deletes all odd sheets using dynamic string analysis. |
-| Copy rows 2 to 47 from even sheets into a master sheet. | **Automated:** Consolidates rows 2–47 accurately, ignoring blanks. |
-| Scan Column H to filter out zeros, empty spaces, and text. | **Automated:** Safely deletes invalid or zero-value VAT rows (Bottom-up). |
-| Manually look up and offset matching positive/negative pairs. | **Automated:** Cross-references `Credit Mem` rows via strict multi-column matching. |
+| Extract the required VAT report from **NAV 2009** as a **PDF**. | *[Prerequisite]* Establishes the baseline data export from the ERP system. |
+| Use **I love pdf** to convert the PDF into a multi-sheet Excel file. | *[Prerequisite]* Converts the document layout into editable workbook rows. |
+| Manually find and drop odd-numbered "Table #" sheets one by one. | **Automated:** Instantly detects and deletes all odd-numbered sheets via string logic. |
+| Copy rows 2 to 47 from remaining even sheets into a master worksheet. | **Automated:** Consolidates rows 2–47 into `Cleaned_Data` while auto-detecting the last row. |
+| Scan Column H to clear out zero amounts (`0.00`), blanks, and text errors. | **Automated:** Sweeps Column H using bottom-up logic to safely purge invalid rows. |
+| Look up matching positive/negative reversals and manual offsets. | **Automated:** Cross-references `Credit Mem` rows with a strict multi-column verification (A, E, F) and purges paired lines. |
+
 
 ---
 
@@ -427,17 +428,19 @@ Function IsText(val As Variant) As Boolean
 
 End Function 
 ```
- ## 🚀 How to Run the Macro
+## 🚀 How to Run the Macro
 
-1. Convert your extracted **NAV 2009** PDF report to Excel.
-2. Open the converted workbook and press `ALT + F11` to trigger the VBA editor.
-3. Click `Insert` -> `Module` and paste the script above.
-4. Close the editor, return to your Excel sheet, and press `ALT + F8`.
-5. Select `CleanMergeAndFilterColumnH` and click **Run**.
+1. Download the data report from **Microsoft Dynamics NAV 2009** in **PDF** format.
+2. Convert the downloaded PDF file into an Excel sheet using **I love pdf**.
+3. Open the converted Excel workbook.
+4. Press `ALT + F11` to open the VBA editor, click `Insert` -> `Module`, and paste the macro code.
+5. Close the editor, return to your Excel sheet, press `ALT + F8`, select `CleanMergeAndFilterColumnH`, and click **Run**.
 
 ---
 
 ### 💡 Project Notes & Optimization
-* **Automated Reconciliation:** This script includes an active validation pass that automatically matches positive and negative ledger balances based on `Credit Mem` conditions.
-* **Dual-Row Elimination:** Once matching records are detected across identical columns (A, E, and F), both offsetting lines are cleanly purged from the sheet.
-* **Process Safeguards:** Includes integrated bottom-up loops to prevent row-skipping errors and fires a final success notification box upon completion.
+* **Manual Prep Integration:** This macro is tailored specifically to handle the structural formatting anomalies generated after converting system PDFs via *I love pdf*.
+* **Automated Reconciliation:** Once the raw Excel is ready, the script executes a validation pass that automatically matches positive and negative ledger balances based on `Credit Mem` conditions.
+* **Dual-Row Elimination:** When offsetting records are verified across identical columns (A, E, and F), both lines are cleanly purged from the final sheet.
+* **Process Safeguards:** Includes integrated bottom-up loops to prevent row-skipping errors and displays a final success notification box upon completion.
+
